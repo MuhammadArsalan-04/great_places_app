@@ -60,12 +60,16 @@ class _InputImageState extends State<InputImage> {
       source: ImageSource.camera,
       maxWidth: 600,
     );
+
+    if (imagePicked == null) {
+      return;
+    }
     setState(() {
-      imageFile = File(imagePicked!.path);
+      imageFile = File(imagePicked.path);
     });
 
     Directory appDirectory = await sysPath.getApplicationDocumentsDirectory();
-    String fileName = path.basename(imagePicked!.path);
+    String fileName = path.basename(imagePicked.path);
 
     final capturedImage =
         await imageFile!.copy("${appDirectory.path}/$fileName");

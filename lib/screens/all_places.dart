@@ -10,7 +10,6 @@ class AllPlaces extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placesData = Provider.of<PlacesProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Great Places'),
@@ -23,31 +22,44 @@ class AllPlaces extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<PlacesProvider>(
-          child: const Center(
-              child:
-                  Text('No Places Added Yet , Please Add Places To The List')),
-          builder: (context, allPlaces, ch) {
-            return allPlaces.getAllPlaces.isEmpty
-                ? ch!
-                : ListView.builder(
-                    itemCount: allPlaces.getAllPlaces.length,
-                    itemBuilder: (context, index) => Column(
-                          children: [
-                            ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage: FileImage(
-                                  allPlaces.getAllPlaces[index].imageFile,
-                                ),
-                              ),
-                              title: Text(allPlaces.getAllPlaces[index].title),
-                            ),
-                            const Divider(
-                              thickness: 1.4,
-                            ),
-                          ],
-                        ));
-          }),
+      body: FutureBuilder(
+        future: Provider.of<PlacesProvider>(context, listen: false)
+            .getAndFetchPlaces(),
+        builder: (context, snapshot) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? Center(
+                  child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary),
+                )
+              : Consumer<PlacesProvider>(
+                  child: const Center(
+                      child: Text(
+                          'No Places Added Yet , Please Add Places To The List')),
+                  builder: (context, allPlaces, ch) {
+                    return allPlaces.getAllPlaces.isEmpty
+                        ? ch!
+                        : ListView.builder(
+                            itemCount: allPlaces.getAllPlaces.length,
+                            itemBuilder: (context, index) => Column(
+                                  children: [
+                                    ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage: FileImage(
+                                          allPlaces
+                                              .getAllPlaces[index].imageFile,
+                                        ),
+                                      ),
+                                      title: Text(
+                                          allPlaces.getAllPlaces[index].title),
+                                    ),
+                                    const Divider(
+                                      thickness: 1.4,
+                                    ),
+                                  ],
+                                ));
+                  },);
+        },
+      ),
     );
   }
 }
