@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:great_places_app/provider/places_provider.dart';
 import 'package:great_places_app/widgets/input_image.dart';
+import 'package:great_places_app/widgets/input_location.dart';
 import 'package:provider/provider.dart';
 
 class AddNewPlace extends StatefulWidget {
@@ -59,7 +60,11 @@ class _AddNewPlaceState extends State<AddNewPlace> {
                     const SizedBox(
                       height: 10,
                     ),
-                    InputImage(getCapturedImage)
+                    InputImage(getCapturedImage),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputLocation(),
                   ],
                 ),
               ),
