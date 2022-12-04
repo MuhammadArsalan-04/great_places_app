@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
             colorScheme: theme.colorScheme.copyWith(secondary: Colors.amber),
             appBarTheme: const AppBarTheme(color: Colors.indigo)),
         home: const AllPlaces(),
-        routes: {AddNewPlace.routeName: (ctx) => const AddNewPlace()},
+        routes: {
+          AddNewPlace.routeName: (ctx) => const AddNewPlace(),
+          },
       ),
     );
   }

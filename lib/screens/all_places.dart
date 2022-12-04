@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:great_places_app/provider/places_provider.dart';
 import 'package:great_places_app/screens/add_new_places.dart';
+import 'package:great_places_app/screens/place_details_screen.dart';
 import 'package:provider/provider.dart';
 
 class AllPlaces extends StatelessWidget {
@@ -51,13 +52,19 @@ class AllPlaces extends StatelessWidget {
                                       ),
                                       title: Text(
                                           allPlaces.getAllPlaces[index].title),
+                                      subtitle: Text(allPlaces
+                                          .getAllPlaces[index]
+                                          .location!
+                                          .address),
+                                      onTap: () {},
                                     ),
                                     const Divider(
                                       thickness: 1.4,
                                     ),
                                   ],
                                 ));
-                  },);
+                  },
+                );
         },
       ),
     );

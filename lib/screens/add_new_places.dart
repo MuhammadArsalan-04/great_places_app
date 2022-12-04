@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:great_places_app/models/location.dart';
 import 'package:great_places_app/provider/places_provider.dart';
 import 'package:great_places_app/widgets/input_image.dart';
 import 'package:great_places_app/widgets/input_location.dart';
@@ -18,23 +17,8 @@ class AddNewPlace extends StatefulWidget {
 
 class _AddNewPlaceState extends State<AddNewPlace> {
   final TextEditingController textController = TextEditingController();
-
   File? _capturedImage;
-
-  void getCapturedImage(File capturedFile) {
-    _capturedImage = capturedFile;
-  }
-
-  void savePlace() {
-    if (_capturedImage == null || textController.text.isEmpty) {
-      return;
-    }
-
-    Provider.of<PlacesProvider>(context, listen: false)
-        .savePlace(textController.text, _capturedImage!);
-
-    Navigator.of(context).pop();
-  }
+  Location? _pickedLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +48,7 @@ class _AddNewPlaceState extends State<AddNewPlace> {
                     const SizedBox(
                       height: 20,
                     ),
-                    InputLocation(),
+                    InputLocation(mapSelectedLocation),
                   ],
                 ),
               ),
@@ -90,5 +74,46 @@ class _AddNewPlaceState extends State<AddNewPlace> {
         ],
       ),
     );
+  }
+
+  void getCapturedImage(File capturedFile) {
+    _capturedImage = capturedFile;
+  }
+
+
+  void savePlace() {
+    if (_capturedImage == null ||
+        textController.text.isEmpty ||
+        _pickedLocation == null) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      if (_capturedImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please provide an image'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+      if (textController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please provide Location Name'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+      if (_pickedLocation == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please select location'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+      return;
+    }
+
+    //Saving in database through provider
+    Provider.of<PlacesProvider>(context, listen: false)
+        .savePlace(textController.text, _capturedImage! , _pickedLocation!);
+    Navigator.of(context).pop();
+  }
+
+  void mapSelectedLocation(Location selectedLocation) {
+    _pickedLocation = selectedLocation;
   }
 }
